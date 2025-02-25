@@ -47,7 +47,7 @@ Ensuring **efficiency, accuracy, and security** in tax automation. 🚀
 
 
 ## Demo Video
-[Watch Demo](assets/video.mp4)
+[Watch Demo](https://drive.google.com/file/d/1LtTvwVHoOfpH72HicIQD7VXVGntMfXvT/view?usp=sharing)
 
 ## Features  
 **Home Page**  
@@ -58,16 +58,16 @@ Ensuring **efficiency, accuracy, and security** in tax automation. 🚀
 ![Feature 2](assets/calculator.png)  
 
 
-**Chatbot Assistance** – Get instant tax support with AI-powered chatbot.  
+**Chatbot Assistance and Automatic filling** – Get instant tax support with AI-powered chatbot.  
 ![Feature 3](assets/chat.jpg)  
 
  **Expert Advice** – Consult tax professionals for personalized guidance. 
 
-
+![Feature 4](assets/expert-advice.jpg)  
 
  
 **AI-Powered Tax Planning** – Optimize tax strategies with intelligent AI insights. 
-![Feature 5](assets/tax-planning.jpg)  
+![Feature 5](assets/prcicing.jpg)  
 
  
 
