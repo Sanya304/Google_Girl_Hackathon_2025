@@ -67,7 +67,7 @@ Ensuring **efficiency, accuracy, and security** in tax automation. 🚀
 
  
 **AI-Powered Tax Planning** – Optimize tax strategies with intelligent AI insights. 
-![Feature 5](assets/prcicing.jpg)  
+![Feature 5](assetst/tax-planning.jpg)  
 
  
 
