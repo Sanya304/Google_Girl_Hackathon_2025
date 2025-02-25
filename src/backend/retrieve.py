@@ -1,42 +1,25 @@
-# import subprocess
-
-# def installDependencies(packages):
-#     for package in packages:
-#         try:
-#             subprocess.run(["pip", "install", package], check=True)
-#         except subprocess.CalledProcessError as e:
-#             print(f"Failed to install package '{package}': {e}")
-
-# packages = ["google-cloud", "google-api-core", "uvicorn", "fastapi", "typing", "vertexai","google-cloud-discoveryengine"]
-# installDependencies(packages)
-
 from typing import List
 from google.api_core.client_options import ClientOptions
 from google.cloud import discoveryengine_v1 as discoveryengine
-from vertexai.preview.generative_models import (
-    GenerativeModel,
-    GenerationResponse,
-)
-import vertexai
+from vertexai.preview.generative_models import GenerativeModel
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import asyncio
+import vertexai
 
-PROJECT_ID = "taxeaseai"
-REGION = "us-central1"
-
-MEMORY = []
-
+# Initialize Vertex AI and FastAPI
+PROJECT_ID = "taxeraai"
+REGION = "asia-south1"
 vertexai.init(project=PROJECT_ID, location=REGION)
 
+# Initialize the Gemini model
 model = GenerativeModel("gemini-1.5-pro-001")
 model = model.start_chat()
+
+# Initialize FastAPI app
 app = FastAPI()
 
-origins = [
-    "http://localhost:3000",
-]
-
+# CORS Middleware
+origins = ["http://localhost:3000"]
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -45,14 +28,28 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-INSTRUCTION =
+# Global memory for chat history
+MEMORY = []
+
+# Instruction for the AI model
+INSTRUCTION = """
+GOAL:
+TaxEraAI is a cutting-edge Tax Filing Assistant developed to revolutionize the tax filing experience, TaxEraAI automates complex processes, simplifies calculations, identifies deductions, and minimizes errors, ensuring a seamless and stress-free tax journey for individuals and businesses alike.
+
+Key Features :
+1. Automated Tax Filing: Streamline your tax filing process with intelligent automation.
+2. Simplified Calculations: Break down complex tax jargon into easy-to-understand terms.
+3. Deduction Optimization: Maximize your savings by identifying eligible deductions and credits.
+4. Error Minimization: Reduce the risk of errors with advanced error-checking algorithms.
+"""
 
 model.send_message(INSTRUCTION)
 
+# Function to retrieve document data
 def retrieveDocumentData(
     search_query: str,
-    project_id="taxeaseai",
-    location="us",
+    project_id="taxeraai",
+    location="asia-south1",
     engine_id="696ce1c2-d49f-413a-af3e-beb67e3bdbe5"
 ):
     client_options = (
@@ -62,7 +59,6 @@ def retrieveDocumentData(
     )
 
     client = discoveryengine.SearchServiceClient(client_options=client_options)
-
     serving_config = f"projects/{project_id}/locations/{location}/collections/default_collection/engines/{engine_id}/servingConfigs/default_config"
 
     content_search_spec = discoveryengine.SearchRequest.ContentSearchSpec(
@@ -104,24 +100,22 @@ def retrieveDocumentData(
 
     return context
 
+# API endpoint to handle user queries
 @app.get("/query/{query}")
 async def processQuery(query: str):
     global MEMORY
     if len(MEMORY) > 4:
         MEMORY.pop(0)
 
-    context_window =  retrieveDocumentData(query)
+    context_window = retrieveDocumentData(query)
     PROMPT = f"""
-    MEMORY : {MEMORY}
-    QUERY : {query}\n
-
-    CONTEXT_WINDOW :{context_window}"""
+    MEMORY: {MEMORY}
+    QUERY: {query}\n
+    CONTEXT_WINDOW: {context_window}"""
 
     response = model.send_message(PROMPT).candidates[0].content.parts[0].text
     MEMORY.append(f"""
-    USER : {query}
-    ANSWER : {response}
+    USER: {query}
+    ANSWER: {response}
     """)
-    return {
-        "response": response
-    }
+    return {"response": response}
